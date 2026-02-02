@@ -33,11 +33,17 @@ jobs:
             $GITHUB_WORKSPACE/diy-part1.sh
           fi
 
-      - name: Update feeds
+      - name: Update feeds (stable + debug)
         run: |
           cd openwrt
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
+          git config --global http.postBuffer 524288000
+          git config --global http.version HTTP/1.1
+          git config --global core.compression 0
+          echo "Starting feeds update..."
+          ./scripts/feeds update -a || echo "feeds update failed, see above log"
+          ./scripts/feeds install -a || echo "feeds install failed"
+          echo "Feeds update finished"
+          ls -l feeds/
 
       - name: Load .config
         run: |
