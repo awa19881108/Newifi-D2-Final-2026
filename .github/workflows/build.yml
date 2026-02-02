@@ -55,6 +55,7 @@ jobs:
       - name: Compile firmware
         run: |
           cd openwrt
+          make defconfig
           make -j1 V=s
 
       - name: Upload firmware
