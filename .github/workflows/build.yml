@@ -17,14 +17,13 @@ jobs:
           sudo apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 unzip zlib1g-dev lib32gcc-s1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib antlr3 gperf wget curl swig rsync
           sudo apt-get -y install python3-setuptools python3-dev python3-pyelftools
 
-      - name: Clone OpenWrt
+      - name: Clone OpenWrt (GitHub mirror)
         run: |
-          for i in {1..3}; do
-            git clone --depth=1 -b openwrt-24.10 https://github.com/openwrt/openwrt.git openwrt && break
-            echo "Clone failed, retry $i/3..."
-            sleep 10
-          done
-
+          git config --global http.postBuffer 1048576000
+          git config --global http.version HTTP/1.1
+          git config --global core.compression 0
+          git clone --depth=1 -b openwrt-24.10 https://github.com/openwrt/openwrt.git openwrt
+  
       - name: Run diy-part1.sh
         run: |
           if [ -f "$GITHUB_WORKSPACE/diy-part1.sh" ]; then
